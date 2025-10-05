@@ -39,14 +39,14 @@ class FileStorage:
 
         if self.p["cert_reqs"]:
             self.client = Minio(
-                self.p["enpoint"],
+                self.p["endpoint"],
                 access_key=self.p["access_key"],
                 secret_key=self.p["secret_key"],
                 secure=self.p["secure"],
             )
         else:
             self.client = Minio(
-                self.p["enpoint"],
+                self.p["endpoint"],
                 access_key=self.p["access_key"],
                 secret_key=self.p["secret_key"],
                 secure=self.p["secure"],
