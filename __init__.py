@@ -31,7 +31,8 @@ class FileStorage:
         if utilstack.lower() == 'minio':
             for myp in ["endpoint", "access_key", "secret_key", "bucket_name"]:
                 if myp not in self.p:
-                    raise AttributeError("Missing {myp} in FileStorage client init with MinIO")
+                    print("self.p =", self.p)
+                    raise AttributeError(f"Missing {myp} in FileStorage client init with MinIO")
             self.p["secure"] = self.p.get("secure", True)
             self.p["cert_reqs"] = self.p.get("cert_reqs", True)
 
