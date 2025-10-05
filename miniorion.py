@@ -3,6 +3,7 @@ from minio import Minio
 from func import calculate_file_hash
 from urllib3.exceptions import MaxRetryError
 import urllib3
+from pathlib import Path
 
 class MinioFileStorage(FileStorage):
     def __init__(self, **kwargs):
@@ -36,6 +37,17 @@ class MinioFileStorage(FileStorage):
                 # cert_reqs="CERT_REQUIRED",
                 # cert_reqs="CERT_NONE",),
             )
+
+    def push_folder(self, source_folder, destination_folder):
+        """Send the folder content to MinIO
+        :todo: Improve for recursive folders
+        """
+        myfolder = Path(source_folder)
+        # Push all files
+        for fichier in myfolder.iterdir():
+            if fichier.is_file():
+                self.push_file(str(fichier), str(Path(destination_folder) / fichier.name))
+
 
     def push_file(self, source_file, destination_file):
         """Send a file to MinIO."""
