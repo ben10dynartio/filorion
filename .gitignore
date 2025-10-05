@@ -1,5 +1,6 @@
 # Project env & pass
 multipass/*
+testkeys/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
