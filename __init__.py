@@ -1,2 +1,2 @@
-from filestorage import FileStorage
-from miniorion import MinioFileStorage
+from filorion.filestorage import FileStorage
+from filorion.miniorion import MinioFileStorage

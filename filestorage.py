@@ -5,7 +5,7 @@ from urllib3.exceptions import MaxRetryError
 import urllib3
 import shutil
 import os
-from func import calculate_file_hash
+from filorion.func import calculate_file_hash
 
 class FileStorage:
 
