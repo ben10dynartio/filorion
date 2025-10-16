@@ -54,3 +54,11 @@ class MinioFileStorage(FileStorage):
         local_hash = calculate_file_hash(source_file)
         metadata = {'hashcode': local_hash}
         self.client.fput_object(self.p["bucket_name"], destination_file, source_file, metadata=metadata)
+
+
+    def get_list_files(self, prefix=None, recursive=False):
+        try:
+            return list(self.client.list_objects(self.p["bucket_name"], prefix=prefix, recursive=recursive))
+        except MaxRetryError as e:
+            print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
+            raise e

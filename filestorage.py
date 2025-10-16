@@ -21,14 +21,7 @@ class FileStorage:
 
     def get_list_files(self, prefix=None, recursive=False):
         """Liste les objets dans le bucket spécifié."""
-        if self.utilstack == 'minio':
-            try:
-                return list(self.client.list_objects(self.p["bucket_name"], prefix=prefix, recursive=recursive))
-            except MaxRetryError as e:
-                print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, 'sinamet-modules'))
-                raise e
-        else:
-            raise ValueError("Unknwon stack")
+        pass
 
     def get_hashcode(self, bucket_name, file_path):
         """Récupère le hashcode d'un fichier dans MinIO à partir de ses métadonnées."""
