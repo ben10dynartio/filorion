@@ -91,6 +91,7 @@ class MinioFileStorage(FileStorage):
         except MaxRetryError:
             return False
         miniopath = Path(destination_path)
+        miniopath.mkdir(parents=True, exist_ok=True)
         for obj in lst_objects:
             #print("Move file %s to %s | " % (obj, miniopath / obj.object_name), end="")
             doc = self.client.fget_object(self.p["bucket_name"], obj.object_name, miniopath / obj.object_name)
