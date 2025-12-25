@@ -17,7 +17,6 @@ class MinioFileStorage(FileStorage):
         self.p["secure"] = self.p.get("secure", True)
         self.p["cert_reqs"] = self.p.get("cert_reqs", True)
 
-
         if self.p["cert_reqs"]:
             self.client = Minio(
                 self.p["endpoint"],
@@ -49,11 +48,20 @@ class MinioFileStorage(FileStorage):
                 self.push_file(str(fichier), str(Path(destination_folder) / fichier.name))
 
 
-    def push_file(self, source_file, destination_file):
+    def push_file(self, source_file, destination_file, error="raise"):
         """Send a file to MinIO."""
-        local_hash = calculate_file_hash(source_file)
-        metadata = {'hashcode': local_hash}
-        self.client.fput_object(self.p["bucket_name"], destination_file, source_file, metadata=metadata)
+        try:
+            local_hash = calculate_file_hash(source_file)
+            metadata = {'hashcode': local_hash}
+            self.client.fput_object(self.p["bucket_name"], destination_file, source_file, metadata=metadata)
+        except Exception as e:
+            if error=="raise":
+                raise e
+            if error=="warn":
+                print("ERROR with push_file", source_file, "to", destination_file)
+                print(e)
+            if error=="pass":
+                pass
 
 
     def get_list_files(self, prefix=None, recursive=False):
