@@ -70,3 +70,32 @@ class MinioFileStorage(FileStorage):
         except MaxRetryError as e:
             print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
             raise e
+
+
+    def get_list_folders(self):
+        try:
+            lst_objects = self.client.list_objects(self.p["bucket_name"])
+            return [obj.object_name[:-1] for obj in lst_objects]
+        except MaxRetryError as e:
+            print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
+            print(e)
+            return ["MinIO Connection Error !"]
+
+
+    def get_all_files(self, destination_path, verbose=False):
+        """Synchronise les fichiers d'un bucket avec un dossier local."""
+        if verbose: print("Sync client = %s" % self.client)
+
+        try:
+            lst_objects = self.client.list_objects(self.p["bucket_name"], recursive=True)
+        except MaxRetryError:
+            return False
+        miniopath = Path(destination_path)
+        for obj in lst_objects:
+            #print("Move file %s to %s | " % (obj, miniopath / obj.object_name), end="")
+            doc = self.client.fget_object(self.p["bucket_name"], obj.object_name, miniopath / obj.object_name)
+            #print(doc)
+        return True
+
+
+

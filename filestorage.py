@@ -9,7 +9,7 @@ from filorion.func import calculate_file_hash
 
 class FileStorage:
 
-    def __init__(self, utilstack, **kwargs):
+    def __init__(self, **kwargs):
         self.utilstack = "undefined"
 
     def push_folder(self, source_folder, destination_folder):
