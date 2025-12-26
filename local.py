@@ -13,7 +13,7 @@ class LocalFileStorage(FileStorage):
                 raise AttributeError(f"Missing {myp} in LocalFileStorage client init")
 
 
-    def delete_all():
+    def delete_all(self):
         modules_local_copy = os.listdir(self.p["path"])
         for module in modules_local_copy:
             mypath = Path(self.p["path"]) / module
