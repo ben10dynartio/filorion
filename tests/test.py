@@ -1,5 +1,5 @@
-from miniorion import MinioFileStorage
-from __init__ import FileStorage
+from filorion import GarageFileStorage
+
 from testkeys.testkey import testkeys, pathfile1_o, pathfile1_d, pathfolder1_o, pathfolder1_d
 """
 testkeys = {"bucket_name":"xxxx",
@@ -9,7 +9,9 @@ testkeys = {"bucket_name":"xxxx",
             "secure":True}
 """
 
-fileclient = MinioFileStorage(**testkeys)
+fileclient = GarageFileStorage(cert_reqs=False, **testkeys)
+print(fileclient)
 
+fileclient.get_all_files("testlocal/")
 #fileclient.push_file(pathfile1_o, pathfile1_d)
-fileclient.push_folder(pathfolder1_o, pathfolder1_d)
+#fileclient.push_folder(pathfolder1_o, pathfolder1_d)
