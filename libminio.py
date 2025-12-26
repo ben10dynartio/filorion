@@ -1,6 +1,7 @@
 from pathlib import Path
 from urllib3.exceptions import MaxRetryError
 import urllib3
+from datetime import timedelta
 
 from minio import Minio
 
