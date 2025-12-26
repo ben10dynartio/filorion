@@ -51,7 +51,6 @@ class MinioFileStorage(FileStorage):
             if fichier.is_file():
                 self.push_file(str(fichier), str(Path(destination_folder) / fichier.name))
 
-
     def push_file(self, source_file, destination_file, error="raise"):
         """Send a file to MinIO."""
         try:
@@ -67,14 +66,12 @@ class MinioFileStorage(FileStorage):
             if error=="pass":
                 pass
 
-
     def get_list_files(self, prefix=None, recursive=False):
         try:
             return list(self.client.list_objects(self.p["bucket_name"], prefix=prefix, recursive=recursive))
         except MaxRetryError as e:
             print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
             raise e
-
 
     def get_list_folders(self):
         try:
@@ -84,7 +81,6 @@ class MinioFileStorage(FileStorage):
             print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
             print(e)
             return ["MinIO Connection Error !"]
-
 
     def get_all_files(self, destination_path, verbose=False):
         """Synchronise les fichiers d'un bucket avec un dossier local."""
@@ -101,6 +97,36 @@ class MinioFileStorage(FileStorage):
                 directory.mkdir(parents=True, exist_ok=True)
                 doc = self.client.fget_object(self.p["bucket_name"], obj.object_name, miniopath / obj.object_name)
         return True
+
+    def remove_all(self, verbose=False):
+        """Supprime tous les objets existants dans le bucket"""
+        if verbose: print(f"🔄 Réinitialisation du bucket '{self.p["bucket_name"]}' en cours...")
+        objects_to_delete = list(self.get_list_files(self.p["bucket_name"], recursive=True))
+        if verbose:
+            if not objects_to_delete:
+                print(f"✅ Aucun fichier trouvé dans le bucket '{self.p["bucket_name"]}'. Rien à supprimer.")
+            else:
+                print(f"🔍 {len(objects_to_delete)} fichiers trouvés à supprimer...")
+        for obj in objects_to_delete:
+            self.remove_file(obj.object_name)
+        if verbose: print("✅ Tous les fichiers ont été supprimés.")
+
+    delete_all = remove_all
+
+    def get_share_link(self, path, expire_time_min=60):
+        """Génère un lien de partage pour un fichier.
+        path: storage file path"""
+        url = self.client.presigned_get_object(
+            self.p["bucket_name"], path, expires=timedelta(minutes=expire_time_min))
+        return url
+
+    def get_hashcode(self, path):
+        """Récupère le hashcode d'un fichier dans MinIO à partir de ses métadonnées."""
+        try:
+            obj = self.client.stat_object(self.p["bucket_name"], path)
+            return obj.metadata.get('hashcode', None)
+        except Exception as e:
+            return None
 
 
 

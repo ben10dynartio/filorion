@@ -12,6 +12,6 @@ testkeys = {"bucket_name":"xxxx",
 fileclient = GarageFileStorage(cert_reqs=False, **testkeys)
 print(fileclient)
 
-fileclient.get_all_files("testlocal/")
+print(fileclient.get_list_files())
 #fileclient.push_file(pathfile1_o, pathfile1_d)
 #fileclient.push_folder(pathfolder1_o, pathfolder1_d)
