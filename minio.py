@@ -1,9 +1,13 @@
-from filorion.filestorage import FileStorage
-from minio import Minio
-from func import calculate_file_hash
+from pathlib import Path
 from urllib3.exceptions import MaxRetryError
 import urllib3
-from pathlib import Path
+
+from minio import Minio
+
+from filorion.filestorage import FileStorage
+from filorion.func import calculate_file_hash
+
+
 
 class MinioFileStorage(FileStorage):
     def __init__(self, **kwargs):

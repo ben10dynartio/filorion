@@ -1,5 +1,6 @@
-from filorion.filestorage import FileStorage
 from pathlib import Path
+
+from filorion.filestorage import FileStorage
 
 class LocalFileStorage(FileStorage):
     def __init__(self, **kwargs):

@@ -1,6 +1,8 @@
-from filorion.minio import MinioFileStorage
-from minio import Minio
 import urllib3
+
+from minio import Minio
+
+from filorion.minio import MinioFileStorage
 
 class GarageFileStorage(MinioFileStorage):
     def __init__(self, **kwargs):
