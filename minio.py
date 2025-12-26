@@ -1,6 +1,6 @@
 from filorion.filestorage import FileStorage
 from minio import Minio
-from filorion.func import calculate_file_hash
+from func import calculate_file_hash
 from urllib3.exceptions import MaxRetryError
 import urllib3
 from pathlib import Path

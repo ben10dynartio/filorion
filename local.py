@@ -1,4 +1,4 @@
-from filorion.minio import MinioFileStorage
+from filorion.filestorage import FileStorage
 from pathlib import Path
 
 class LocalFileStorage(FileStorage):
