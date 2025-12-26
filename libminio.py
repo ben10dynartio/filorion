@@ -95,12 +95,11 @@ class MinioFileStorage(FileStorage):
         except MaxRetryError:
             return False
         miniopath = Path(destination_path)
-        print("LST OBJ =", lst_objects)
         for obj in lst_objects:
-            print(obj)
-            directory = miniopath / obj.object_name
-            directory.mkdir(parents=True, exist_ok=True)
-            doc = self.client.fget_object(self.p["bucket_name"], obj.object_name, miniopath / obj.object_name)
+            if not obj.is_dir:
+                directory = (miniopath / obj.object_name).parent
+                directory.mkdir(parents=True, exist_ok=True)
+                doc = self.client.fget_object(self.p["bucket_name"], obj.object_name, miniopath / obj.object_name)
         return True
 
 
