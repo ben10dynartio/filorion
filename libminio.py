@@ -53,7 +53,7 @@ class MinioFileStorage(FileStorage):
                 self.push_file(str(fichier), str(Path(destination_folder) / fichier.name))
 
     def push_file(self, source_file, destination_file, error="raise"):
-        """Send a file to MinIO."""
+        """Send a file to FileStorage"""
         try:
             local_hash = calculate_file_hash(source_file)
             metadata = {'hashcode': local_hash}
@@ -79,9 +79,11 @@ class MinioFileStorage(FileStorage):
             lst_objects = self.client.list_objects(self.p["bucket_name"])
             return [obj.object_name[:-1] for obj in lst_objects]
         except MaxRetryError as e:
-            print("MinIO Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
+            print("FileStorage Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
             print(e)
-            return ["MinIO Connection Error !"]
+            print(dir(e))
+            msg = MinioFileStorage(e)
+            return [f"FileStorage Connection Error : {msg}"]
 
     def get_all_files(self, destination_path, verbose=False):
         """Synchronise les fichiers d'un bucket avec un dossier local."""
@@ -128,6 +130,17 @@ class MinioFileStorage(FileStorage):
             return obj.metadata.get('hashcode', None)
         except Exception as e:
             return None
+
+    @staticmethod
+    def connection_error_message(error):
+        error = str(error)
+        if "Temporary failure in name resolution" in error:
+            return "Temporary failure in name resolution"
+        if "Connection refused" in error:
+            return "Connection refused (probably wrong port)"
+        if ("wrong version number" in error) and ("SSLError" in error):
+            return "Wrong SSL version number"
+        return "Unknown error"
 
 
 
