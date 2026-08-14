@@ -82,7 +82,7 @@ class MinioFileStorage(FileStorage):
             print("FileStorage Error for 'minioclient=%s/bucketname=%s'" % (self.client, self.p["bucket_name"]))
             print(e)
             print(dir(e))
-            msg = MinioFileStorage(e)
+            msg = MinioFileStorage.connection_error_message(e)
             return [f"FileStorage Connection Error : {msg}"]
 
     def get_all_files(self, destination_path, verbose=False):
